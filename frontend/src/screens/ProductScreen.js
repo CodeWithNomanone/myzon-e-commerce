@@ -15,7 +15,7 @@ export default function ProductScreen(props) {
   const { id: productId } = params;
 
   const [qty, setQty] = useState(1);
-  console.log(qty);
+  // console.log(qty);
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
@@ -31,7 +31,9 @@ export default function ProductScreen(props) {
   return (
     <div>
       {loading ? (
-        <LoadingBox></LoadingBox>
+        <div>
+          <LoadingBox />
+        </div>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
@@ -40,7 +42,7 @@ export default function ProductScreen(props) {
           <div className="row top">
             <div className="col-2">
               <img
-                className="large"
+                className="large imgProduct"
                 src={product.image}
                 alt={product.name}
               ></img>
@@ -91,6 +93,7 @@ export default function ProductScreen(props) {
                           <div>Qty</div>
                           <div>
                             <select
+                              className="selectbox h1white "
                               value={qty}
                               onChange={(e) => setQty(e.target.value)}
                             >

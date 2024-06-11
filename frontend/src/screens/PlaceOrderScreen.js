@@ -133,7 +133,11 @@ export default function PlaceOrderScreen(props) {
                   Place Order
                 </button>
               </li>
-              {loading && <LoadingBox></LoadingBox>}
+              {loading && (
+                <div>
+                  <LoadingBox />
+                </div>
+              )}
               {error && <MessageBox variant="danger">{error}</MessageBox>}
             </ul>
           </div>

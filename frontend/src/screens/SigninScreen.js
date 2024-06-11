@@ -10,6 +10,7 @@ export default function SigninScreen(props) {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordShown, setPasswordShown] = useState(false);
 
   // const redirect = props.location.search
   //   ? props.location.search.split('=')[1]
@@ -24,7 +25,7 @@ export default function SigninScreen(props) {
   const dispatch = useDispatch();
 
   const submitHandler = (e) => {
-    console.log(email, password);
+    console.log(email);
     e.preventDefault();
     dispatch(signin(email, password));
   };
@@ -40,8 +41,13 @@ export default function SigninScreen(props) {
         <div>
           <h1>Sign In</h1>
         </div>
-        {loading && <LoadingBox></LoadingBox>}
+        {loading && (
+          <div>
+            <LoadingBox />
+          </div>
+        )}
         {error && <MessageBox variant="danger">{error}</MessageBox>}
+
         <div>
           <label htmlFor="email">Email address</label>
           <input
@@ -55,12 +61,17 @@ export default function SigninScreen(props) {
         <div>
           <label htmlFor="password">Password</label>
           <input
-            type="password"
+            type={passwordShown ? 'text' : 'password'}
             id="password"
             placeholder="Enter password"
             required
             onChange={(e) => setPassword(e.target.value)}
-          ></input>
+          />
+          <i
+            className={passwordShown ? 'fa fa-eye-slash' : 'fa fa-eye'}
+            onClick={() => setPasswordShown((prevState) => !prevState)}
+            title={passwordShown ? 'Hide password' : 'Show password'}
+          ></i>
         </div>
         <div>
           <label />

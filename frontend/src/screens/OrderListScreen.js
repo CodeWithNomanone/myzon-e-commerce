@@ -4,9 +4,11 @@ import { deleteOrder, listOrders } from '../actions/orderActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { ORDER_DELETE_RESET } from '../constants/orderConstants';
+import { useNavigate } from 'react-router';
 
 export default function OrderListScreen(props) {
   const orderList = useSelector((state) => state.orderList);
+  const navigate = useNavigate();
   const { loading, error, orders } = orderList;
   const orderDelete = useSelector((state) => state.orderDelete);
   const {
@@ -19,6 +21,7 @@ export default function OrderListScreen(props) {
     dispatch({ type: ORDER_DELETE_RESET });
     dispatch(listOrders());
   }, [dispatch, successDelete]);
+
   const deleteHandler = (order) => {
     // TODO: delete handler
     if (window.confirm('Are you sure to delete?')) {
@@ -28,10 +31,16 @@ export default function OrderListScreen(props) {
   return (
     <div>
       <h1>Orders</h1>
-      {loadingDelete && <LoadingBox></LoadingBox>}
+      {loadingDelete && (
+        <div>
+          <LoadingBox />
+        </div>
+      )}
       {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
       {loading ? (
-        <LoadingBox></LoadingBox>
+        <div>
+          <LoadingBox />
+        </div>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
@@ -65,7 +74,7 @@ export default function OrderListScreen(props) {
                     type="button"
                     className="small"
                     onClick={() => {
-                      props.history.push(`/order/${order._id}`);
+                      navigate(`/order/${order._id}`);
                     }}
                   >
                     Details

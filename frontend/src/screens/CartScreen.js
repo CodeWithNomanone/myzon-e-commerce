@@ -13,13 +13,13 @@ export default function CartScreen() {
   //   ? Number(props.location.search.split('=')[1])
   //   : 1;
   const { search } = useLocation();
-  console.log(search);
+  // console.log(search);
   const qtyInUrl = new URLSearchParams(search).get('qty');
-  console.log(qtyInUrl);
+  // console.log(qtyInUrl);
   const qty = qtyInUrl ? Number(qtyInUrl) : 1;
-  console.log(qty);
+  // console.log(qty);
   const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  const { cartItems, error } = cart;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -40,7 +40,8 @@ export default function CartScreen() {
   return (
     <div className="row top">
       <div className="col-2">
-        <h1>Shopping Cart</h1>
+        <h1 className="h1white">Shopping Cart</h1>
+        {error && <MessageBox variant="danger">{error}</MessageBox>}
         {cartItems.length === 0 ? (
           <MessageBox>
             Cart is empty. <Link to="/">Go Shopping</Link>

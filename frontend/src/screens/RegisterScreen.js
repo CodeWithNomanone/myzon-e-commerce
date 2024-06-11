@@ -11,6 +11,7 @@ export default function RegisterScreen(props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordShown, setPasswordShown] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
 
   // const redirect = props.location.search
@@ -46,10 +47,14 @@ export default function RegisterScreen(props) {
   return (
     <div>
       <form className="form" onSubmit={submitHandler}>
-        <div>
+        <div className="register-heading">
           <h1>Create Account</h1>
         </div>
-        {loading && <LoadingBox></LoadingBox>}
+        {loading && (
+          <div>
+            <LoadingBox />
+          </div>
+        )}
         {error && <MessageBox variant="danger">{error}</MessageBox>}
         <div>
           <label htmlFor="name">Name</label>
@@ -74,22 +79,32 @@ export default function RegisterScreen(props) {
         <div>
           <label htmlFor="password">Password</label>
           <input
-            type="password"
+            type={passwordShown ? 'text' : 'password'}
             id="password"
             placeholder="Enter password"
             required
             onChange={(e) => setPassword(e.target.value)}
-          ></input>
+          />
+          <i
+            className={passwordShown ? 'fa fa-eye-slash' : 'fa fa-eye'}
+            onClick={() => setPasswordShown((prevState) => !prevState)}
+            title={passwordShown ? 'Hide password' : 'Show password'}
+          ></i>
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
-            type="password"
+            type={passwordShown ? 'text' : 'password'}
             id="confirmPassword"
             placeholder="Enter confirm password"
             required
             onChange={(e) => setConfirmPassword(e.target.value)}
-          ></input>
+          />
+          <i
+            className={passwordShown ? 'fa fa-eye-slash' : 'fa fa-eye'}
+            onClick={() => setPasswordShown((prevState) => !prevState)}
+            title={passwordShown ? 'Hide password' : 'Show password'}
+          ></i>
         </div>
         <div>
           <label />

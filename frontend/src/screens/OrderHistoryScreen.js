@@ -1,63 +1,64 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { listOrderMine } from '../actions/orderActions';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
+import { useNavigate } from 'react-router';
+import { savePaymentMethod } from '../actions/cartActions';
+import CheckoutSteps from '../components/CheckoutSteps';
 
-export default function OrderHistoryScreen(props) {
-  const orderMineList = useSelector((state) => state.orderMineList);
-  const { loading, error, orders } = orderMineList;
+export default function PaymentMethodScreen(props) {
+  const navigate = useNavigate();
+  const cart = useSelector((state) => state.cart);
+  const { shippingAddress } = cart;
+  if (!shippingAddress.address) {
+    navigate('/shipping');
+  }
+  const [paymentMethod, setPaymentMethod] = useState('PayPal');
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(listOrderMine());
-  }, [dispatch]);
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(savePaymentMethod(paymentMethod));
+    navigate('/placeorder');
+  };
   return (
     <div>
-      <h1>Order History</h1>
-      {loading ? (
-        <LoadingBox></LoadingBox>
-      ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
-      ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>DATE</th>
-              <th>TOTAL</th>
-              <th>PAID</th>
-              <th>DELIVERED</th>
-              <th>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order._id}>
-                <td>{order._id}</td>
-                <td>{order.createdAt.substring(0, 10)}</td>
-                <td>{order.totalPrice.toFixed(2)}</td>
-                <td>{order.isPaid ? order.paidAt.substring(0, 10) : 'No'}</td>
-                <td>
-                  {order.isDelivered
-                    ? order.deliveredAt.substring(0, 10)
-                    : 'No'}
-                </td>
-                <td>
-                  <button
-                    type="button"
-                    className="small"
-                    onClick={() => {
-                      props.history.push(`/order/${order._id}`);
-                    }}
-                  >
-                    Details
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      <CheckoutSteps step1 step2 step3></CheckoutSteps>
+      <form className="form" onSubmit={submitHandler}>
+        <div>
+          <h1>Payment Method</h1>
+        </div>
+        <div>
+          <div>
+            <input
+              type="radio"
+              id="paypal"
+              value="PayPal"
+              name="paymentMethod"
+              required
+              checked
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            ></input>
+            <label htmlFor="paypal">PayPal</label>
+          </div>
+        </div>
+        <div>
+          <div>
+            <input
+              type="radio"
+              id="stripe"
+              value="Stripe"
+              name="paymentMethod"
+              required
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            ></input>
+            <label htmlFor="stripe">Stripe</label>
+          </div>
+        </div>
+        <div>
+          <label />
+          <button className="primary" type="submit">
+            Continue
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

@@ -14,14 +14,14 @@ import {
   PRODUCT_DELETE_RESET,
 } from '../constants/productConstants';
 
-export default function ProductListScreen(props) {
+export default function ProductListScreen() {
   const navigate = useNavigate();
   const { pageNumber = 1 } = useParams();
   const { pathname } = useLocation();
   const sellerMode = pathname.indexOf('/seller') >= 0;
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
-
+  console.log('pro ', products);
   const productCreate = useSelector((state) => state.productCreate);
   const {
     loading: loadingCreate,
@@ -78,13 +78,23 @@ export default function ProductListScreen(props) {
         </button>
       </div>
 
-      {loadingDelete && <LoadingBox></LoadingBox>}
+      {loadingDelete && (
+        <div>
+          <LoadingBox />
+        </div>
+      )}
       {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
 
-      {loadingCreate && <LoadingBox></LoadingBox>}
+      {loadingCreate && (
+        <div>
+          <LoadingBox />
+        </div>
+      )}
       {errorCreate && <MessageBox variant="danger">{errorCreate}</MessageBox>}
       {loading ? (
-        <LoadingBox></LoadingBox>
+        <div>
+          <LoadingBox />
+        </div>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
