@@ -8,17 +8,16 @@ import mongoose from 'mongoose';
 import userRouter from './routers/userRouter.js';
 import orderRouter from './routers/orderRouter.js';
 import uploadRouter from './routers/uploadRouter.js';
-// import cors from 'cors';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
-//two middelwere
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/api/uploads', uploadRouter); // Place this after middleware
 //EDIT>
-// app.use(cors());
-
+app.use(cors());
 mongoose
   .connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
@@ -31,7 +30,6 @@ mongoose
     console.log('Error while connecting database');
   });
 
-app.use('/api/uploads', uploadRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
@@ -129,6 +127,3 @@ io.on('connection', (socket) => {
 httpServer.listen(port, () => {
   console.log(`Serve at http://localhost:${port}`);
 });
-// app.listen(port, () => {
-//   console.log(`Server at http://localhost:${port}`);
-// });

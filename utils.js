@@ -127,7 +127,6 @@ export const payOrderEmailTemplate = (order) => {
   </p>
   `;
 };
-
 // import jwt from 'jsonwebtoken';
 
 // export const generateToken = (user) => {

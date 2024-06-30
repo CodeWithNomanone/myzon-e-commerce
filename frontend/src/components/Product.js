@@ -4,11 +4,11 @@ import Rating from './Rating';
 
 export default function Product(props) {
   const { product } = props;
-
+  const imageUrl = `http://localhost:1991${product.image}`; // Prepend the server base URL
   return (
     <div key={product._id} className="card hoverr">
       <Link to={`/product/${product._id}`}>
-        <img className="medium" src={product.image} alt={product.name} />
+        <img className="medium" src={imageUrl} alt={product.name} />
       </Link>
       <div className="card-body">
         <Link to={`/product/${product._id}`}>

@@ -1,25 +1,11 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
-import multer from 'multer';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-// import cloudinary from '../config/cloudinaryConfig.js';
 import Product from '../models/productModel.js';
 import User from '../models/userModel.js';
 import { isAdmin, isAuth, isSellerOrAdmin } from '../utils.js';
 import data from '../data.js';
 
 const productRouter = express.Router();
-
-// Cloudinary storage configuration
-// const storage = new CloudinaryStorage({
-//   cloudinary: cloudinary,
-//   params: {
-//     folder: 'ecommerce',
-//     allowed_formats: ['jpg', 'png'],
-//   },
-// });
-
-// const upload = multer({ storage: storage });
 
 productRouter.get(
   '/',
@@ -117,20 +103,6 @@ productRouter.get(
   })
 );
 
-// Route for uploading an image
-// productRouter.post(
-//   '/upload',
-//   isAuth,
-//   isSellerOrAdmin,
-//   upload.single('image'),
-//   (req, res) => {
-//     try {
-//       res.status(200).json({ url: req.file.path, publicId: req.file.filename });
-//     } catch (error) {
-//       res.status(500).json({ message: 'Image upload failed', error });
-//     }
-//   }
-// );
 productRouter.post(
   '/',
   isAuth,
@@ -178,7 +150,7 @@ productRouter.put(
 productRouter.delete(
   '/:id',
   isAuth,
-  isSellerOrAdmin,
+  isAdmin,
   expressAsyncHandler(async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (product) {

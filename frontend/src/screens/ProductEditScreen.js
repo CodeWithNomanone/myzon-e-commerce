@@ -34,10 +34,11 @@ export default function ProductEditScreen(props) {
   const dispatch = useDispatch();
   useEffect(() => {
     if (successUpdate) {
+      dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate('/productlist');
     }
     if (!product || product._id !== productId || successUpdate) {
-      dispatch({ type: PRODUCT_UPDATE_RESET });
+      // dispatch({ type: PRODUCT_UPDATE_RESET });
 
       dispatch(detailsProduct(productId));
     } else {
@@ -50,18 +51,19 @@ export default function ProductEditScreen(props) {
       setDescription(product.description);
     }
   }, [product, dispatch, productId, successUpdate, navigate]);
+
   const submitHandler = (e) => {
     console.log(productId);
     e.preventDefault();
-    // TODO: dispatch update product
+    // Dispatch the update action
     dispatch(
       updateProduct({
         _id: productId,
         name,
         price,
         image,
-        category,
         brand,
+        category,
         countInStock,
         description,
       })
@@ -72,6 +74,7 @@ export default function ProductEditScreen(props) {
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
+
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
     const bodyFormData = new FormData();
@@ -84,7 +87,8 @@ export default function ProductEditScreen(props) {
           Authorization: `Bearer ${userInfo.token}`,
         },
       });
-      setImage(data);
+      setImage(data.path); // Ensure this is a relative URL
+      // setImage(data);
       setLoadingUpload(false);
     } catch (error) {
       setErrorUpload(error.message);
@@ -141,9 +145,9 @@ export default function ProductEditScreen(props) {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></input>
-            </div>
-            <div>
-              <label htmlFor="imageFile">Image File</label>
+              {/* </div>
+            <div> */}
+              {/* <label htmlFor="imageFile">Image File</label> */}
               <input
                 type="file"
                 id="imageFile"
