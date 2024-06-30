@@ -33,6 +33,8 @@ export default function ProductEditScreen(props) {
 
   const dispatch = useDispatch();
   useEffect(() => {
+    let isMounted = true; // Add mounted flag
+
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate('/productlist');
@@ -41,7 +43,8 @@ export default function ProductEditScreen(props) {
       // dispatch({ type: PRODUCT_UPDATE_RESET });
 
       dispatch(detailsProduct(productId));
-    } else {
+    } else if (isMounted) {
+      // Only update state if mounted
       setName(product.name);
       setPrice(product.price);
       setImage(product.image);
@@ -50,6 +53,9 @@ export default function ProductEditScreen(props) {
       setBrand(product.brand);
       setDescription(product.description);
     }
+    return () => {
+      isMounted = false; // Cleanup on unmount
+    };
   }, [product, dispatch, productId, successUpdate, navigate]);
 
   const submitHandler = (e) => {

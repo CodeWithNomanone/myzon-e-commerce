@@ -40,16 +40,21 @@ export default function ProductListScreen() {
   const { userInfo } = userSignin;
   const dispatch = useDispatch();
   useEffect(() => {
-    if (successCreate) {
+    let isMounted = true; // Add mounted flag
+
+    if (successCreate && isMounted) {
       dispatch({ type: PRODUCT_CREATE_RESET });
       navigate(`/product/${createdProduct._id}/edit`);
     }
-    if (successDelete) {
+    if (successDelete && isMounted) {
       dispatch({ type: PRODUCT_DELETE_RESET });
     }
     dispatch(
       listProducts({ seller: sellerMode ? userInfo._id : '', pageNumber })
     );
+    return () => {
+      isMounted = false; // Cleanup on unmount
+    };
   }, [
     createdProduct,
     dispatch,
