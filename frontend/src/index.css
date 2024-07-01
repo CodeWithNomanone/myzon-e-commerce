@@ -486,18 +486,35 @@ img.large {
   border-left: 0;
 }
 /* Pagination */
-.pagination a {
+
+.pagination > a {
   padding: 1rem;
   margin: 0.5rem;
   border-radius: 0.5rem;
   border: 0.1rem #a4a4a4 solid;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.pagination a.active {
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination > button {
+  margin: 0 5px;
+  padding: 10px 15px;
+}
+.pagination > .active {
   font-weight: bold;
+  background-color: #6c6666;
+}
+
+.pagination > button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 /* Dashboard */
 
