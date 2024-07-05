@@ -8,7 +8,7 @@ import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 
-export default function ProductEditScreen(props) {
+export default function ProductEditScreen() {
   const navigate = useNavigate();
   const params = useParams();
   const { id: productId } = params;
@@ -59,7 +59,6 @@ export default function ProductEditScreen(props) {
   }, [product, dispatch, productId, successUpdate, navigate]);
 
   const submitHandler = (e) => {
-    console.log(productId);
     e.preventDefault();
     // Dispatch the update action
     dispatch(

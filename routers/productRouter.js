@@ -10,7 +10,7 @@ const productRouter = express.Router();
 productRouter.get(
   '/',
   expressAsyncHandler(async (req, res) => {
-    const pageSize = 10;
+    const pageSize = 5;
     const page = Number(req.query.pageNumber) || 1;
     const name = req.query.name || '';
     const category = req.query.category || '';
@@ -38,13 +38,14 @@ productRouter.get(
         : order === 'toprated'
         ? { rating: -1 }
         : { _id: -1 };
-    const count = await Product.count({
+    const count = await Product.countDocuments({
       ...sellerFilter,
       ...nameFilter,
       ...categoryFilter,
       ...priceFilter,
       ...ratingFilter,
-    });
+    }); // Total number of products
+
     const products = await Product.find({
       ...sellerFilter,
       ...nameFilter,

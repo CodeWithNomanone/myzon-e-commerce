@@ -6,15 +6,12 @@ import { signin } from '../actions/userActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 
-export default function SigninScreen(props) {
+export default function SigninScreen() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordShown, setPasswordShown] = useState(false);
 
-  // const redirect = props.location.search
-  //   ? props.location.search.split('=')[1]
-  //   : '/';
   const { search } = useLocation();
   const redirectInUrl = new URLSearchParams(search).get('redirect');
   const redirect = redirectInUrl ? redirectInUrl : '/';
@@ -25,13 +22,11 @@ export default function SigninScreen(props) {
   const dispatch = useDispatch();
 
   const submitHandler = (e) => {
-    console.log(email);
     e.preventDefault();
     dispatch(signin(email, password));
   };
   useEffect(() => {
     if (userInfo) {
-      // props.history.push(redirect);
       navigate(redirect);
     }
   }, [navigate, redirect, userInfo]);

@@ -9,7 +9,7 @@ body {
   background-color: #212121;
   margin: 0;
   height: 100vh;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -121,11 +121,7 @@ select:hover,
 textarea:hover,
 button:hover {
   border: 0.1rem #ffffff solid;
-  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
-    rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
-    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
-    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
-    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+  background-color: #756161;
 }
 .selectbox {
   border: 0.1rem #413f3f solid;
@@ -486,18 +482,42 @@ img.large {
   border-left: 0;
 }
 /* Pagination */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
 
-.pagination > a {
+.pagination-link {
+  margin: 0 5px;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #f4f3be;
+  transition: background-color 0.3s, color 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+    rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
+    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+  background-color: #413f3f;
+  border-radius: 0.5rem;
+  border: 0.1rem #5a5353 solid;
+}
+
+.pagination-link:hover {
+  background-color: #756161;
+  color: #fff;
+  border: 0.1rem #ffffff solid;
+}
+
+.pagination-link.active {
+  background-color: #756161;
+  color: #fff;
+  border: 0.1rem #5a5353 solid;
+}
+/* .pagination > a {
   margin: 0 5px;
   padding: 10px 15px;
-  /* padding: 1rem;
-  margin: 0.5rem;
-  border-radius: 0.5rem;
-  border: 0.1rem #a4a4a4 solid;
-  font-size: 1.2rem;
-  font-family: Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
 }
 .pagination {
   display: flex;
@@ -517,7 +537,7 @@ img.large {
 .pagination > button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
-}
+} */
 /* Dashboard */
 
 .summary > li {

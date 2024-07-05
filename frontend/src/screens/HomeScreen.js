@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import Product from '../components/Product';
@@ -7,20 +7,17 @@ import MessageBox from '../components/MessageBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../actions/productActions';
 import { listTopSellers } from '../actions/userActions';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
-  const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 4;
-  const totalPages = Math.ceil(products.length / productsPerPage);
-  const currentProducts = products.slice(
-    (currentPage - 1) * productsPerPage,
-    currentPage * productsPerPage
-  );
+  const pageNumber = new URLSearchParams(location.search).get('page') || 1;
+
+  const productList = useSelector((state) => state.productList);
+  const { loading, error, products, pages } = productList;
 
   const userTopSellersList = useSelector((state) => state.userTopSellersList);
   const {
@@ -30,19 +27,33 @@ export default function HomeScreen() {
   } = userTopSellersList;
 
   useEffect(() => {
-    dispatch(listProducts({}));
-    dispatch(listTopSellers());
-  }, [dispatch]);
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    let isMounted = true; // Mounted flag
+
+    const performTasks = async () => {
+      if (isMounted) {
+        // Dispatch actions only if the component is still mounted
+        dispatch(listProducts({ pageNumber }));
+        dispatch(listTopSellers());
+      }
+    };
+
+    performTasks();
+
+    // Cleanup function
+    return () => {
+      isMounted = false; // Set the mounted flag to false on unmount
+    };
+  }, [dispatch, pageNumber]);
+
+  const handlePageChange = (newPage) => {
+    navigate(`?page=${newPage}`);
   };
+
   return (
     <div>
       <h1 className="h1white">Top Sellers</h1>
       {loadingSellers ? (
-        <div>
-          <LoadingBox />
-        </div>
+        <LoadingBox />
       ) : errorSellers ? (
         <MessageBox variant="danger">{errorSellers}</MessageBox>
       ) : (
@@ -62,41 +73,29 @@ export default function HomeScreen() {
       )}
       <h2>Featured Products</h2>
       {loading ? (
-        <div>
-          <LoadingBox />
-        </div>
+        <LoadingBox />
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <>
           {products.length === 0 && <MessageBox>No Product Found</MessageBox>}
           <div className="row center">
-            {currentProducts.map((product) => (
+            {products.map((product) => (
               <Product key={product._id} product={product}></Product>
             ))}
           </div>
-          <div className="pagination">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
-            >
-              Previous
-            </button>
-            {[...Array(totalPages).keys()].map((x) => (
+          <div className="row center pagination-container">
+            {Array.from({ length: pages }, (_, i) => (
               <button
-                key={x + 1}
-                className={currentPage === x + 1 ? 'active' : ''}
-                onClick={() => handlePageChange(x + 1)}
+                key={i}
+                onClick={() => handlePageChange(i + 1)}
+                className={`pagination-link ${
+                  i + 1 === Number(pageNumber) ? 'active' : ''
+                }`}
               >
-                {x + 1}
+                {i + 1}
               </button>
             ))}
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              Next
-            </button>
           </div>
         </>
       )}

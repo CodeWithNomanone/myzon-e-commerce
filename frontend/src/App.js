@@ -49,9 +49,26 @@ function App() {
     error: errorCategories,
     categories,
   } = productCategoryList;
+  // useEffect(() => {
+  //   dispatch(listProductCategories());
+  // }, [dispatch]);
   useEffect(() => {
-    dispatch(listProductCategories());
+    let isMounted = true; // Mounted flag
+
+    const fetchCategories = async () => {
+      if (isMounted) {
+        dispatch(listProductCategories());
+      }
+    };
+
+    fetchCategories();
+
+    // Cleanup function to set the flag to false on unmount
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch]);
+
   return (
     <BrowserRouter>
       <div className="grid-container">
@@ -271,8 +288,17 @@ function App() {
                 </AdminRoute>
               }
             />
+
             <Route
               path="/userlist"
+              element={
+                <AdminRoute>
+                  <UserListScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/userlist/pageNumber/:pageNumber"
               element={
                 <AdminRoute>
                   <UserListScreen />

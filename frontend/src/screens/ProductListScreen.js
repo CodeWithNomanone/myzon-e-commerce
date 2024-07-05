@@ -21,7 +21,7 @@ export default function ProductListScreen() {
   const sellerMode = pathname.indexOf('/seller') >= 0;
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
-  console.log('pro ', products);
+  // console.log('pro ', products);
   const productCreate = useSelector((state) => state.productCreate);
   const {
     loading: loadingCreate,
@@ -143,10 +143,10 @@ export default function ProductListScreen() {
               ))}
             </tbody>
           </table>
-          <div className="row center pagination">
+          <div className="row center pagination-container">
             {[...Array(pages).keys()].map((x) => (
               <Link
-                className={x + 1 === page ? 'active' : ''}
+                className={`pagination-link ${x + 1 === page ? 'active' : ''}`}
                 key={x + 1}
                 to={`/productlist/pageNumber/${x + 1}`}
               >

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { listProducts } from '../actions/productActions';
@@ -8,7 +8,7 @@ import Product from '../components/Product';
 import Rating from '../components/Rating';
 import { prices, ratings } from '../utils';
 
-export default function SearchScreen(props) {
+export default function SearchScreen() {
   const navigate = useNavigate();
   const {
     name = 'all',
@@ -29,22 +29,47 @@ export default function SearchScreen(props) {
     error: errorCategories,
     categories,
   } = productCategoryList;
+
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
-    dispatch(
-      listProducts({
-        pageNumber,
-        name: name !== 'all' ? name : '',
-        category: category !== 'all' ? category : '',
-        min,
-        max,
-        rating,
-        order,
-      })
-    );
-  }, [category, dispatch, max, min, name, order, rating, pageNumber]);
+    setIsMounted(true); // Ensure mounted flag is true when component mounts
+
+    const fetchProducts = async () => {
+      if (isMounted) {
+        dispatch(
+          listProducts({
+            pageNumber,
+            name: name !== 'all' ? name : '',
+            category: category !== 'all' ? category : '',
+            min,
+            max,
+            rating,
+            order,
+          })
+        );
+      }
+    };
+
+    fetchProducts();
+
+    return () => {
+      setIsMounted(false); // Set the flag to false on unmount
+    };
+  }, [
+    category,
+    dispatch,
+    max,
+    min,
+    name,
+    order,
+    rating,
+    pageNumber,
+    isMounted,
+  ]);
 
   const getFilterUrl = (filter) => {
-    const filterPage = filter.page || pageNumber;
+    const filterPage = filter.page || 1; // Reset to 1 if not specified
     const filterCategory = filter.category || category;
     const filterName = filter.name || name;
     const filterRating = filter.rating || rating;
@@ -165,10 +190,12 @@ export default function SearchScreen(props) {
                     <Product key={product._id} product={product}></Product>
                   ))}
               </div>
-              <div className="row center pagination">
+              <div className="row center pagination-container">
                 {[...Array(pages).keys()].map((x) => (
                   <Link
-                    className={x + 1 === page ? 'active' : ''}
+                    className={`pagination-link ${
+                      x + 1 === page ? 'active' : ''
+                    }`}
                     key={x + 1}
                     to={getFilterUrl({ page: x + 1 })}
                   >
