@@ -91,27 +91,25 @@ export default function SupportScreen() {
   const submitHandler = (e) => {
     e.preventDefault();
     if (!messageBody.trim()) {
-      alert('Error. Please type message.');
+      alert('Error. Please type a message.');
     } else {
-      allMessages = [
-        ...allMessages,
-        { body: messageBody, name: userInfo.name },
-      ];
+      const newMessage = {
+        body: messageBody,
+        name: userInfo.name,
+        isAdmin: userInfo.isAdmin,
+        _id: selectedUser._id,
+      };
+
+      allMessages = [...allMessages, newMessage];
       setMessages(allMessages);
       setMessageBody('');
-      setTimeout(() => {
-        socket.emit('onMessage', {
-          body: messageBody,
-          name: userInfo.name,
-          isAdmin: userInfo.isAdmin,
-          _id: selectedUser._id,
-        });
-      }, 1000);
+
+      socket.emit('onMessage', newMessage);
     }
   };
 
   return (
-    <div className="row top full-container">
+    <div className="row top support-container">
       <div className="col-1 support-users">
         {users.filter((x) => x._id !== userInfo._id).length === 0 && (
           <MessageBox>No Online User Found</MessageBox>
@@ -122,7 +120,7 @@ export default function SupportScreen() {
             .map((user) => (
               <li
                 key={user._id}
-                className={user._id === selectedUser._id ? '  selected' : '  '}
+                className={user._id === selectedUser._id ? 'selected' : ''}
               >
                 <button
                   className="block"
@@ -145,28 +143,29 @@ export default function SupportScreen() {
           <MessageBox>Select a user to start chat</MessageBox>
         ) : (
           <div className="messages-container">
-            <div className="row">
-              <strong>Chat with {selectedUser.name} </strong>
+            <div className="row rowuser">
+              <strong> {selectedUser.name} </strong>
             </div>
             <ul ref={uiMessagesRef}>
               {messages.length === 0 && <li>No message.</li>}
               {messages.map((msg, index) => (
-                <li key={index}>
-                  <strong>{`${msg.name}: `}</strong> {msg.body}
+                <li
+                  key={index}
+                  className={msg.isAdmin ? 'admin-message' : 'user-message'}
+                >
+                  {msg.body}
                 </li>
               ))}
             </ul>
             <div>
-              <form onSubmit={submitHandler} className="row">
+              <form onSubmit={submitHandler} className="row chatrow">
                 <input
                   value={messageBody}
                   onChange={(e) => setMessageBody(e.target.value)}
                   type="text"
-                  placeholder="type message"
+                  placeholder="Type Message"
                 />
-                <button type="submit" className="chatboxButton">
-                  Send
-                </button>
+                <button type="submit" className="fa fa-paper-plane"></button>
               </form>
             </div>
           </div>
