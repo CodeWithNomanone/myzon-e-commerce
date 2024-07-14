@@ -646,7 +646,7 @@ img.large {
   background: #335a54;
   border: 0.1rem #3c9285 solid !important;
   padding: 0 10px 0 10px !important;
-  overflow: scroll;
+  overflow-y: scroll;
   max-height: 20rem;
   min-height: 20rem;
   display: flex;

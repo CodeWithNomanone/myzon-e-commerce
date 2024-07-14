@@ -89,13 +89,16 @@ function App() {
             <SearchBox />
           </div>
           <div>
-            <Link to="/cart">
-              <i className="fa fa-opencart"></i>
-              Cart
-              {cartItems.length > 0 && (
-                <span className="badge">{cartItems.length}</span>
-              )}
-            </Link>
+            {' '}
+            {!userInfo?.isAdmin && !userInfo?.isSeller && (
+              <Link to="/cart">
+                <i className="fa fa-opencart"></i>
+                Cart
+                {cartItems.length > 0 && (
+                  <span className="badge">{cartItems.length}</span>
+                )}
+              </Link>
+            )}
             {userInfo ? (
               <div className="dropdown">
                 <Link to="#">
