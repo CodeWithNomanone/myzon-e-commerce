@@ -110,9 +110,7 @@ export default function ChatBox(props) {
         <div className="card-body">
           <div className="row">
             <span>Support</span>
-            <div className="cross" onClick={closeHandler}>
-              <i className="fa fa-close" />
-            </div>
+            <button className="na-close" onClick={closeHandler}></button>
           </div>
           <div className="row adminrow">
             <div className="adminname">
@@ -139,7 +137,7 @@ export default function ChatBox(props) {
               type="text"
               placeholder="Type message"
             />
-            <button type="submit" className="fa fa-paper-plane"></button>
+            <button type="submit" className="na-paper-plane"></button>
           </form>
         </div>
       )}

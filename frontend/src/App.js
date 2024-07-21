@@ -31,6 +31,12 @@ import MapScreen from './screens/MapScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import SupportScreen from './screens/SupportScreen';
 import ChatBox from './components/ChatBox';
+import socketIOClient from 'socket.io-client';
+
+const ENDPOINT =
+  window.location.host.indexOf('localhost') >= 0
+    ? 'http://127.0.0.1:5000'
+    : window.location.host;
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -42,16 +48,33 @@ function App() {
   const signoutHandler = () => {
     dispatch(signout());
   };
-
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const productCategoryList = useSelector((state) => state.productCategoryList);
   const {
     loading: loadingCategories,
     error: errorCategories,
     categories,
   } = productCategoryList;
-  // useEffect(() => {
-  //   dispatch(listProductCategories());
-  // }, [dispatch]);
+
+  useEffect(() => {
+    if (userInfo && userInfo.isAdmin) {
+      const socket = socketIOClient(ENDPOINT);
+      socket.emit('onLogin', {
+        _id: userInfo._id,
+        name: userInfo.name,
+        isAdmin: userInfo.isAdmin,
+      });
+
+      socket.on('message', (data) => {
+        setUnreadMessages((prev) => prev + 1);
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [userInfo]);
+
   useEffect(() => {
     let isMounted = true; // Mounted flag
 
@@ -140,6 +163,9 @@ function App() {
               <div className="dropdown">
                 <Link to="#admin">
                   Admin <i className="fa fa-caret-down"></i>
+                  {unreadMessages > 0 && (
+                    <span className="notify-badge">{unreadMessages}</span>
+                  )}
                 </Link>
                 <ul className="dropdown-content">
                   <li>
@@ -328,7 +354,7 @@ function App() {
               path="/support"
               element={
                 <AdminRoute>
-                  <SupportScreen />
+                  <SupportScreen setUnreadMessages={setUnreadMessages} />
                 </AdminRoute>
               }
             />
